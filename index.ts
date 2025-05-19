@@ -5,6 +5,7 @@ import { authRouter } from './routes/auth';
 import cors from 'cors'
 import { userRouter } from './routes/user';
 import cookieParser from 'cookie-parser'
+import { vehicleRouter } from './routes/vehicle';
 
 dotenv.config()
 
@@ -21,6 +22,7 @@ app.use(cookieParser())
 
 app.use('/api/auth', authRouter)
 app.use('/api/user', userRouter)
+app.use('/api/vehicle', vehicleRouter)
 
 app.get('/api', (req: Request, res: Response) => {
   res.send("Home page")

@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, UserRole, VERIFICATION_CODE_STATUS } from "@prisma/client";
 import {
   BadRequestError,
   NotFoundError,
@@ -10,8 +10,6 @@ import { IUser } from "../types/user";
 import { validateEnums } from "../utils/checkValidEnum";
 import {
   EMAIL_CONTEXT,
-  UserRole,
-  VERIFICATION_CODE_STATUS,
 } from "../constants/common";
 import bcrypt from "bcrypt";
 import { generateToken } from "../utils/jwt";
