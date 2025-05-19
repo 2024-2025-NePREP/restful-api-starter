@@ -30,7 +30,7 @@ vehicleRouter.post("/",authMiddleware, asyncHandler(addVehicle));
 //@ts-ignore
 vehicleRouter.get("/",adminMiddleware, asyncHandler(getAllVehicles));
 //@ts-ignore
-vehicleRouter.get("/",authMiddleware, asyncHandler(getMyVehicles));
+vehicleRouter.get("/mine",authMiddleware, asyncHandler(getMyVehicles));
 //@ts-ignore
 vehicleRouter.get("/:vehicleId",authMiddleware, asyncHandler(getSingleVehicle));
 //@ts-ignore

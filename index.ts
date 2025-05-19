@@ -27,7 +27,7 @@ app.use(cookieParser())
 
 app.use('/api/auth', authRouter)
 app.use('/api/user', userRouter)  
-app.use('/api/vehicle',adminMiddleware, vehicleRouter)
+app.use('/api/vehicle', vehicleRouter)
 app.use('/api/parking_slot', parkingSlotRouter)
 app.use('/api/slot_reservation', reservationRouter)
 
