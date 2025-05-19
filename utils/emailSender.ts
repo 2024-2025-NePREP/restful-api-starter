@@ -9,13 +9,22 @@ interface EmailSenderOptions {
     passwordResetLink?: string,
     emailContext: EMAIL_CONTEXT,
     resettingEmail?:string,
+    slotNumber?: string,
+    vehicleOwnerEmail?: string;
+    amount?: number;
+    duration?: string;
+
 }
 export const emailSender = ({
     signInEmail,
     verificationCode,
     passwordResetLink,
     emailContext,
-    resettingEmail
+    resettingEmail, 
+    slotNumber,
+    vehicleOwnerEmail,
+    amount,
+    duration
 }: EmailSenderOptions
 
 ) => {
@@ -50,6 +59,13 @@ export const emailSender = ({
             subject: "Password Reset",
             text: `Reset your password ${passwordResetLink}`,
         };
+    }else if(emailContext === EMAIL_CONTEXT.PARKING_SLOT_ACKNOWLEDGEMENT){
+        mailOptions = {
+            from: senderEmail,
+            to: vehicleOwnerEmail,
+            subject: "Acknowledging your parking slot",
+            text: `Congrats! You will be parking at ${slotNumber} for ${duration} and amount to pay is ${amount} Frw`,
+        }
     }
 
 // Send the OTP

@@ -136,6 +136,53 @@ export const getAllVehicles = async () => {
 return vehicles
 };
 
+
+export const getMyVehicles = async (userId: string) => {
+  /**Check if pageNumber is not 0
+//   if (pageNumber < 0) {
+//     throw new BadRequestError("Page number cannot be less than 0");
+//   }
+
+//   //   Check if limit is between 1 and 100
+//   if (limit < 1 || limit > 100) {
+//     throw new BadRequestError("Limit must be between 1 and 100");
+//   }
+
+//   //   computer the skip
+//   const skip = (pageNumber - 1) * limit;
+
+// //   Implement pagination
+//   const [totalCount, vehicles] = await Promise.all(
+//     [
+//         prisma.vehicle.count(),
+//         prisma.vehicle.findMany({
+//             skip,
+//             take: limit,
+//             orderBy: { plateNumber:"asc"}
+//         })
+//     ]
+//   ) ;
+
+//   const totalPages =Math.ceil(totalCount / limit);
+ */ 
+
+//  Without pagination
+ const vehicles =await prisma.vehicle.findMany({where: {userId}})
+ 
+//  With pagination
+//   return {
+//     vehicles,
+//     totalCount,
+//     itemsPerPage: limit,
+//     totalPages,
+//     currentPage: pageNumber,
+//     hasNextPage: pageNumber<totalPages,
+//     hasPreviousPage: pageNumber >1
+//   };
+return vehicles
+};
+
+
 export const deleteVehicle = async (vehicleId: string) => {
   // Check if the vehicle exists
   const vehicle = await prisma.vehicle.findUnique({ where: { id: vehicleId } });

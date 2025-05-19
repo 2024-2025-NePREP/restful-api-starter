@@ -102,6 +102,7 @@ model SlotReservation {
   processedAt     DateTime? @default(now())
   rejectionReason String?
   startDate       DateTime?
+
   endDate         DateTime?
   slotNumber      String
   createdAt     DateTime       @default(now())
@@ -109,6 +110,15 @@ model SlotReservation {
   user            User              @relation(fields: [userId], references: [id])
   vehicle         Vehicle           @relation(fields: [vehicleId], references: [id])
 
+}
+
+model parkingSlotTicket {
+    id              String            @id @default(uuid())
+    userId String
+    vehicleId String
+    slotNumber String
+    amount Float
+    duration String
 }
 
 model Log {

@@ -85,6 +85,23 @@ export const getAllVehicles = async (req: Request, res: Response) => {
 
 };
 
+export const getMyVehicles = async (req: Request, res: Response) => {
+  try {
+    const {id} = req.user
+    const vehicles = await vehicleService.getMyVehicles(id);
+    return res
+      .status(200)
+      .json(new ApiResponse("Retrieved my vehicles successfully", vehicles));
+  } catch (error) {
+    if (error instanceof Error) {
+      return res.status(400).json(new ApiResponse(error.message, null));
+    }
+  }
+
+    return res.status(500).json(new ApiResponse("Internal server error", null));
+
+};
+
 export const deleteVehicle = async (req: Request, res: Response) => {
   try {
     const { vehicleId } = req.params;

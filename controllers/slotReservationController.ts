@@ -110,6 +110,29 @@ export const getAllParkingSlotRequests = async (
   }
 };
 
+export const getMyParkingSlotRequests = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const {id}  = req.user
+    const reservations = await reservationService.getMyParkingSlotRequests(id);
+    return res
+      .status(200)
+      .json(
+        new ApiResponse(
+          "My reservations retrieved successfully sent",
+          reservations
+        )
+      );
+  } catch (error) {
+    if (error instanceof Error) {
+      return res.status(400).json(new ApiResponse(error.message, null));
+    }
+    return res.status(500).json(new ApiResponse("Internal server error", null));
+  }
+};
+
 export const deleteParkingSlotRequest = async (req: Request, res: Response) => {
   try {
     const { reservationId } = req.params;

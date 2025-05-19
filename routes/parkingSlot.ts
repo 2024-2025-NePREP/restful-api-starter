@@ -1,13 +1,25 @@
 import { Router } from "express";
 import { addParkingSlot, deleteAllParkingSlots, deleteParkingSlot, getAllParkingSlots, getSingleParkingSlot, updateParkingSlot } from "../controllers/parkingSlotController";
 import { asyncHandler } from "../utils/handlerWrapper";
+import { adminMiddleware } from "../middlewares/adminMiddleware";
+import { authMiddleware } from "../middlewares/authMiddleware";
 
 export const parkingSlotRouter = Router()
 
+//@ts-ignore
+parkingSlotRouter.post("/", adminMiddleware,  asyncHandler(addParkingSlot))
 
-parkingSlotRouter.post("/", asyncHandler(addParkingSlot))
-parkingSlotRouter.put("/:slotId", asyncHandler(updateParkingSlot))
-parkingSlotRouter.get("/:slotId", asyncHandler(getSingleParkingSlot))
-parkingSlotRouter.get("/", asyncHandler(getAllParkingSlots))
-parkingSlotRouter.delete("/:slotId", asyncHandler(deleteParkingSlot))
-parkingSlotRouter.delete("/", asyncHandler(deleteAllParkingSlots))
+//@ts-ignore
+parkingSlotRouter.put("/:slotId",adminMiddleware, asyncHandler(updateParkingSlot))
+
+//@ts-ignore
+parkingSlotRouter.get("/:slotId",authMiddleware, asyncHandler(getSingleParkingSlot))
+
+//@ts-ignore
+parkingSlotRouter.get("/",authMiddleware, asyncHandler(getAllParkingSlots))
+
+//@ts-ignore
+parkingSlotRouter.delete("/:slotId",adminMiddleware, asyncHandler(deleteParkingSlot))
+
+//@ts-ignore
+parkingSlotRouter.delete("/",adminMiddleware, asyncHandler(deleteAllParkingSlots))

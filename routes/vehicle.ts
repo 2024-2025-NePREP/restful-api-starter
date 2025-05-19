@@ -4,10 +4,13 @@ import {
   deleteAllVehicles,
   deleteVehicle,
   getAllVehicles,
+  getMyVehicles,
   getSingleVehicle,
   updateVehicle,
 } from "../controllers/vehicleController";
 import { Request, Response, RequestHandler } from "express";
+import { adminMiddleware } from "../middlewares/adminMiddleware";
+import { authMiddleware } from "../middlewares/authMiddleware";
 
 export const vehicleRouter = Router();
 
@@ -21,14 +24,20 @@ export const asyncHandler = (fn: AsyncRequestHandler): RequestHandler => {
   };
 };
 // ... other routes
-vehicleRouter.post("/", asyncHandler(addVehicle));
-vehicleRouter.get("/", asyncHandler(getAllVehicles));
-vehicleRouter.get("/:vehicleId", asyncHandler(getSingleVehicle));
-vehicleRouter.put("/:vehicleId", asyncHandler(updateVehicle));
-vehicleRouter.delete("/:vehicleId", asyncHandler(deleteVehicle));
-vehicleRouter.delete("/", asyncHandler(deleteAllVehicles));
 
-/**
- * TODO
- * Removing that typescript error on the controller functins
- */
+//@ts-ignore
+vehicleRouter.post("/",authMiddleware, asyncHandler(addVehicle));
+//@ts-ignore
+vehicleRouter.get("/",adminMiddleware, asyncHandler(getAllVehicles));
+//@ts-ignore
+vehicleRouter.get("/",authMiddleware, asyncHandler(getMyVehicles));
+//@ts-ignore
+vehicleRouter.get("/:vehicleId",authMiddleware, asyncHandler(getSingleVehicle));
+//@ts-ignore
+vehicleRouter.put("/:vehicleId",authMiddleware, asyncHandler(updateVehicle));
+//@ts-ignore
+vehicleRouter.delete("/:vehicleId",authMiddleware, asyncHandler(deleteVehicle));
+//@ts-ignore
+vehicleRouter.delete("/",authMiddleware, asyncHandler(deleteAllVehicles));
+
+
