@@ -1,0 +1,156 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+enum VehicleType {
+  CAR
+  MOTORCYCLE
+  TRUCK
+  VAN
+  SUV
+}
+
+enum VehicleSize {
+  SMALL
+  MEDIUM
+  LARGE
+}
+
+enum ParkingSlotStatus {
+  AVAILABLE
+  OCCUPIED
+}
+
+enum SlotRequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum ParkingLocation {
+  NORTH
+  SOUTH
+  EAST
+  WEST
+}
+
+enum VERIFICATION_CODE_STATUS {
+  AVAILABLE
+  USED
+}
+
+
+model User {
+  id            String         @id @default(uuid())
+  name          String
+  email         String         @unique
+  password      String
+  role          UserRole       @default(USER)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @default(now()) @updatedAt
+  auditTrails   AuditTrail[]
+  logs          Log[]
+  notifications Notification[]
+  assignedSlots ParkingSlot[]
+  slotRequests  SlotRequest[]
+  vehicles      Vehicle[]
+}
+
+model Vehicle {
+  id           String        @id @default(uuid())
+  userId       String
+  plateNumber  String        @unique
+  vehicleType  VehicleType
+  size         VehicleSize
+  color        String?
+  model        String?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @default(now()) @updatedAt
+  slotRequests SlotRequest[]
+  user         User          @relation(fields: [userId], references: [id])
+}
+
+model ParkingSlot {
+  id             String            @id @default(uuid())
+  assignedUserId String?
+  slotNumber     String            @unique
+  size           VehicleSize
+  vehicleType    VehicleType
+  status         ParkingSlotStatus @default(AVAILABLE)
+  location       ParkingLocation
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @default(now()) @updatedAt
+  user           User?             @relation(fields: [assignedUserId], references: [id])
+  slotRequests   SlotRequest[]
+}
+
+model SlotRequest {
+  id              String            @id @default(uuid())
+  userId          String
+  vehicleId       String
+  slotId          String?
+  requestStatus   SlotRequestStatus @default(PENDING)
+  requestedAt     DateTime          @default(now())
+  processedAt     DateTime?
+  rejectionReason String?
+  startDate       DateTime?
+  endDate         DateTime?
+  slotNumber      String?
+  vehicleDetails  Json?
+  slot            ParkingSlot?      @relation(fields: [slotId], references: [id])
+  user            User              @relation(fields: [userId], references: [id])
+  vehicle         Vehicle           @relation(fields: [vehicleId], references: [id])
+}
+
+model Log {
+  id          String   @id @default(uuid())
+  userId      String?
+  action      String
+  description String
+  createdAt   DateTime @default(now())
+  user        User?    @relation(fields: [userId], references: [id])
+}
+
+model Notification {
+  id        String    @id @default(uuid())
+  userId    String
+  title     String
+  message   String
+  type      String
+  createdAt DateTime  @default(now())
+  readAt    DateTime?
+  user      User      @relation(fields: [userId], references: [id])
+}
+
+model AuditTrail {
+  id              String   @id @default(uuid())
+  action          String
+  entityType      String
+  entityId        String
+  oldValues       Json?
+  newValues       Json?
+  affectedColumns String[]
+  ipAddress       String?
+  createdAt       DateTime @default(now())
+  userId          String?
+  user            User?    @relation(fields: [userId], references: [id])
+}
+
+model VerificationCode {
+  id         String   @id @default(uuid())
+  email      String                   @unique
+  code       String
+  codeStatus VERIFICATION_CODE_STATUS @default(AVAILABLE)
+  expiresAt  DateTime
+}
