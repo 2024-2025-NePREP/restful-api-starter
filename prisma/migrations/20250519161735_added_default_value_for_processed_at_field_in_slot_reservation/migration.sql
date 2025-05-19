@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "SlotReservation" ALTER COLUMN "processedAt" SET DEFAULT CURRENT_TIMESTAMP;

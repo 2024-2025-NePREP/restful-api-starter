@@ -1,22 +1,18 @@
 import { Router } from "express";
 import { changePassword, getProfile, login, logout, register, requestPwordReset, resendOTP, verifyOtp } from "../controllers/authController";
 import { authMiddleware } from "../middlewares/authMiddleware";
+import { asyncHandler } from "./vehicle";
 
 export const authRouter = Router()
 
-// @ts-ignore
 
-// @ts-ignore
-authRouter.post('/register/', register)
+authRouter.post('/register/', asyncHandler(register))
 
-// @ts-ignore
-authRouter.post('/login', login)
+authRouter.post('/login', asyncHandler(login))
 
-// @ts-ignore
-authRouter.post('/verify_otp', verifyOtp)
+authRouter.post('/verify_otp', asyncHandler(verifyOtp))
 
-// @ts-ignore
-authRouter.post('/resend_otp', resendOTP)
+authRouter.post('/resend_otp', asyncHandler(resendOTP))
 
 // @ts-ignore
 authRouter.post('/logout',authMiddleware, logout)
@@ -24,9 +20,7 @@ authRouter.post('/logout',authMiddleware, logout)
 // @ts-ignore
 authRouter.get('/me',authMiddleware, getProfile)
 
-// @ts-ignore
-authRouter.post('/forgot_password', requestPwordReset)
+authRouter.post('/forgot_password', asyncHandler(requestPwordReset))
 
-// @ts-ignore
-authRouter.put('/change_password', changePassword)
+authRouter.put('/change_password', asyncHandler(changePassword))
 

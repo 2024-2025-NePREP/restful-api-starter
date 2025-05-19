@@ -38,6 +38,9 @@ export const register = async (req: Request, res: Response) => {
     } else if (error instanceof Error) {
       return res.status(400).json(new ApiResponse(error.message, null));
     }
+
+    return res.status(500).json(new ApiResponse("Internal server error", null));
+
   }
 };
 
@@ -56,6 +59,9 @@ export const login = async (req: Request, res: Response) => {
     } else if (error instanceof Error) {
       return res.status(400).json(new ApiResponse(error.message, null));
     }
+
+    return res.status(500).json(new ApiResponse("Internal server error", null));
+
   }
 };
 
@@ -84,6 +90,9 @@ export const verifyOtp = async (req: Request, res: Response) => {
     } else if (error instanceof Error) {
       return res.status(400).json(new ApiResponse(error.message, null));
     }
+
+    return res.status(500).json(new ApiResponse("Internal server error", null));
+
   }
 };
 
@@ -96,6 +105,9 @@ export const resendOTP = async (req: Request, res: Response) => {
     if (error instanceof Error) {
       return res.status(400).json(new ApiResponse(error.message, null));
     }
+
+    return res.status(500).json(new ApiResponse("Internal server error", null));
+
   }
 };
 
@@ -112,6 +124,9 @@ export const requestPwordReset = async (req: Request, res: Response) => {
     } else if (error instanceof Error) {
       return res.status(400).json(new ApiResponse(error.message, null));
     }
+
+    return res.status(500).json(new ApiResponse("Internal server error", null));
+
   }
 };
 
@@ -130,6 +145,9 @@ export const changePassword = async (req: Request, res: Response) => {
     } else if (error instanceof Error) {
       return res.status(400).json(new ApiResponse(error.message, null));
     }
+
+    return res.status(500).json(new ApiResponse("Internal server error", null));
+
   }
 };
 
@@ -147,6 +165,9 @@ export const logout = async (req: Request, res: Response) => {
     } else if (error instanceof Error) {
       return res.status(400).json(new ApiResponse(error.message, null));
     }
+
+    return res.status(500).json(new ApiResponse("Internal server error", null));
+
   }
 };
 export const getProfile = (req: Request, res: Response) => {
@@ -159,5 +180,8 @@ export const getProfile = (req: Request, res: Response) => {
     } else if (error instanceof Error) {
       return res.status(400).json(new ApiResponse(error.message, null));
     }
+
+    return res.status(500).json(new ApiResponse("Internal server error", null));
+
   }
 };

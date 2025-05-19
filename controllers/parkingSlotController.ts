@@ -1,24 +1,24 @@
 import { Request, Response } from "express";
-import * as vehicleService from "../services/vehicle";
+import * as parkingSlotService from "../services/parkingSlot";
 import { ApiResponse } from "../apiResponse/response";
 import { BadRequestError, NotFoundError } from "../exceptions/errors";
 
-export const addVehicle = async (
+export const addParkingSlot = async (
   req: Request,
   res: Response
 ) => {
   try {
-    const vehicleData = req.body;
-    const vehicle = await vehicleService.addVehicle(vehicleData);
+    const parkingSlotData = req.body;
+    const parkingSlot = await parkingSlotService.addParkingSlot(parkingSlotData);
     return res
       .status(201)
-      .json(new ApiResponse("Vehicle created successfully", vehicle));
+      .json(new ApiResponse("Parking slot created successfully", parkingSlot));
   } catch (error) {
     if (error.code === "P2002") {
       return res
         .status(400)
         .json(
-          new ApiResponse("Vehicle is created once! change plate number", null)
+          new ApiResponse("Parking slot is created once! change slot number", null)
         );
     } else if (error instanceof Error) {
       return res.status(400).json(new ApiResponse(error.message, null));
@@ -27,17 +27,17 @@ export const addVehicle = async (
     return res.status(500).json(new ApiResponse("Internal server error", null));
   }
 };
-export const updateVehicle = async (req: Request, res: Response) => {
+export const updateParkingSlot = async (req: Request, res: Response) => {
   try {
-    const { vehicleId } = req.params;
-    const updatedVehicleData = req.body;
-    const updatedVehicle = await vehicleService.updateVehicle(
-      vehicleId,
-      updatedVehicleData
+    const { slotId } = req.params;
+    const updatedParkingSlotData = req.body;
+    const updatedParkingSlot = await parkingSlotService.updateParkingSlot(
+      slotId,
+      updatedParkingSlotData
     );
     return res
       .status(200)
-      .json(new ApiResponse("Updated vehicle successfully", updatedVehicle));
+      .json(new ApiResponse("Updated parking slot successfully", updatedParkingSlot));
   } catch (error) {
     if (error instanceof NotFoundError) {
       return res.status(404).json(new ApiResponse(error.message, null));
@@ -50,13 +50,13 @@ export const updateVehicle = async (req: Request, res: Response) => {
   }
 };
 
-export const getSingleVehicle = async (req: Request, res: Response) => {
+export const getSingleParkingSlot = async (req: Request, res: Response) => {
   try {
-    const { vehicleId } = req.params;
-    const vehicle = await vehicleService.getSingleVehicle(vehicleId);
+    const { slotId } = req.params;
+    const parkingSlot = await parkingSlotService.getSingleParkingSlot(slotId);
     return res
       .status(200)
-      .json(new ApiResponse("Retrieved vehicle successfully", vehicle));
+      .json(new ApiResponse("Retrieved parking slot successfully", parkingSlot));
   } catch (error) {
     if (error instanceof NotFoundError) {
       return res.status(404).json(new ApiResponse(error.message, null));
@@ -69,12 +69,12 @@ export const getSingleVehicle = async (req: Request, res: Response) => {
   }
 };
 
-export const getAllVehicles = async (req: Request, res: Response) => {
+export const getAllParkingSlots = async (req: Request, res: Response) => {
   try {
-    const vehicles = await vehicleService.getAllVehicles();
+    const parkingSlots = await parkingSlotService.getAllParkingSlots();
     return res
       .status(200)
-      .json(new ApiResponse("Retrieved all vehicles successfully", vehicles));
+      .json(new ApiResponse("Retrieved all parking slots successfully", parkingSlots));
   } catch (error) {
     if (error instanceof Error) {
       return res.status(400).json(new ApiResponse(error.message, null));
@@ -85,10 +85,10 @@ export const getAllVehicles = async (req: Request, res: Response) => {
 
 };
 
-export const deleteVehicle = async (req: Request, res: Response) => {
+export const deleteParkingSlot = async (req: Request, res: Response) => {
   try {
-    const { vehicleId } = req.params;
-    const result = await vehicleService.deleteVehicle(vehicleId);
+    const { slotId } = req.params;
+    const result = await parkingSlotService.deleteParkingSlot(slotId);
     return res.status(200).json(new ApiResponse(result, null));
   } catch (error) {
     if (error instanceof NotFoundError) {
@@ -102,9 +102,9 @@ export const deleteVehicle = async (req: Request, res: Response) => {
   }
 };
 
-export const deleteAllVehicles = async (req: Request, res: Response) => {
+export const deleteAllParkingSlots = async (req: Request, res: Response) => {
   try {
-    const result = await vehicleService.deleteAllVehicles();
+    const result = await parkingSlotService.deleteAllParkingSlots();
     return res.status(200).json(new ApiResponse(result, null));
   } catch (error) {
     if (error instanceof Error) {

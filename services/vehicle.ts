@@ -2,11 +2,20 @@ import { PrismaClient, VehicleSize, VehicleType } from "@prisma/client";
 import { IVehicle } from "../types/vehicle";
 import { validateEnums } from "../utils/checkValidEnum";
 import { BadRequestError, NotFoundError } from "../exceptions/errors";
+import { isValidUUID } from "../utils/checkUUIDString";
+import { isValidPlateNumber } from "../utils/checkPlateNumberValidity";
 
 const prisma = new PrismaClient();
 
 export const addVehicle = async (vehicle: IVehicle) => {
   const { userId, plateNumber, vehicleType, size, color, model } = vehicle;
+
+  //   Check if userId is a valid UUID
+  isValidUUID(userId);
+
+  //   Check if valid plate number is passed
+  isValidPlateNumber(plateNumber);
+
   // Check if vehicle size and type are valid
   validateEnums({
     size: { value: size, enumType: VehicleSize },
@@ -30,10 +39,23 @@ export const addVehicle = async (vehicle: IVehicle) => {
   });
 };
 export const updateVehicle = async (vehicleId: string, vehicle: IVehicle) => {
+  const { color, model, plateNumber, size, userId, vehicleType } = vehicle;
+
+  // Check if userId and vehicleId are valid UUIDs
+  [vehicleId, userId].forEach((id) => isValidUUID(id));
+
+  //   Check valid plate number
+  isValidPlateNumber(plateNumber);
+
+  // Check if vehicle size and type are valid enums
+  validateEnums({
+    size: { value: size, enumType: VehicleSize },
+    vehicleType: { value: vehicleType, enumType: VehicleType },
+  });
+
   const toBeUpdated = await prisma.vehicle.findUnique({
     where: { id: vehicleId },
   });
-  const { color, model, plateNumber, size, userId, vehicleType } = vehicle;
 
   // Check if vehicle passed has its vehicle
   if (!toBeUpdated?.id) throw new NotFoundError("Vehicle not found");
@@ -70,8 +92,48 @@ export const getSingleVehicle = async (vehicleId: string) => {
 };
 
 export const getAllVehicles = async () => {
-  const vehicles = await prisma.vehicle.findMany();
-  return vehicles;
+  /**Check if pageNumber is not 0
+//   if (pageNumber < 0) {
+//     throw new BadRequestError("Page number cannot be less than 0");
+//   }
+
+//   //   Check if limit is between 1 and 100
+//   if (limit < 1 || limit > 100) {
+//     throw new BadRequestError("Limit must be between 1 and 100");
+//   }
+
+//   //   computer the skip
+//   const skip = (pageNumber - 1) * limit;
+
+// //   Implement pagination
+//   const [totalCount, vehicles] = await Promise.all(
+//     [
+//         prisma.vehicle.count(),
+//         prisma.vehicle.findMany({
+//             skip,
+//             take: limit,
+//             orderBy: { plateNumber:"asc"}
+//         })
+//     ]
+//   ) ;
+
+//   const totalPages =Math.ceil(totalCount / limit);
+ */ 
+
+//  Without pagination
+ const vehicles =await prisma.vehicle.findMany()
+ 
+//  With pagination
+//   return {
+//     vehicles,
+//     totalCount,
+//     itemsPerPage: limit,
+//     totalPages,
+//     currentPage: pageNumber,
+//     hasNextPage: pageNumber<totalPages,
+//     hasPreviousPage: pageNumber >1
+//   };
+return vehicles
 };
 
 export const deleteVehicle = async (vehicleId: string) => {
